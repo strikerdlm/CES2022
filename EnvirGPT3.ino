@@ -1,4 +1,4 @@
-//Code developed by Diego Malpica, for the Chingaza Project
+//Code developed by Diego Malpica, for the Antarctica
 
 #include <TFT_eSPI.h>
 #include "seeed_bme680.h"
@@ -93,21 +93,13 @@ void setup() {
         errorToString(error, errorMessage, 256);
         Serial.println(errorMessage);
     }
-   
   
-  myFile = SD.open("Expedition.csv", FILE_WRITE);
+  SD.begin(SDCARD_SS_PIN, SDCARD_SPI);
+  myFile = SD.open("Envir.csv", FILE_WRITE);
   DateTime now = DateTime(F(__DATE__), F(__TIME__));
-  Serial.println("adjust time!");
-  
-  
+  myFile.println("Date,Time,BP,Temp,HR,Co2,Temp2,HR%");
   rtc.adjust(now);
   now = rtc.now();
-  SD.begin(SDCARD_SS_PIN, SDCARD_SPI);
-  String fileName = String(now.year()) + String(now.month()) + String(now.day()) + String(now.hour()) + String(now.minute()) + String(now.second()) + ".csv";
-  myFile = SD.open(fileName, FILE_WRITE);
-  myFile.println("Time,Temp,mmHg,%,ppm");
-
-  
 }
 
 void loop() {
@@ -117,7 +109,7 @@ void loop() {
   spr.fillSprite(TFT_BLACK);
   spr.setFreeFont(&FreeSansBoldOblique18pt7b); 
   spr.setTextColor(TFT_RED);
-  spr.drawString("Antartic IX Exp", 60 - 15, 10 , 1);// Print the test text in the custom font
+  spr.drawString("Antarctic IX Exp", 60 - 15, 10 , 1);// Print the test text in the custom font
   for(int8_t line_index = 0;line_index < 5 ; line_index++)
   {
     spr.drawLine(0, 50 + line_index, tft.width(), 50 + line_index, TFT_GREEN);
@@ -187,16 +179,15 @@ void loop() {
         Serial.print(co2);
     }
 
-    spr.setTextColor(TFT_WHITE);
-    spr.drawString("CO2:", 230 -24 , 180 - 24, 1);// Print the test text in the custom font
-    spr.drawRoundRect(230 - 24 ,180,80,40,5,TFT_WHITE);
-    spr.setTextColor(TFT_WHITE);
-    spr.drawNumber(co2,230 - 20 ,180+10,1);
-    spr.setTextColor(TFT_GREEN);
-    spr.drawString("ppm", 230 + 12, 180+8, 1);
+  spr.setTextColor(TFT_WHITE);
+  spr.drawString("CO2:", 230 -24 , 180 - 24, 1);// Print the test text in the custom font
+  spr.drawRoundRect(230 - 24 ,180,80,40,5,TFT_WHITE);
+  spr.setTextColor(TFT_WHITE);
+  spr.drawNumber(co2,230 - 20 ,180+10,1);
+  spr.setTextColor(TFT_GREEN);
+  spr.drawString("ppm", 230 + 12, 180+8, 1);
     
-  SD.begin(SDCARD_SS_PIN, SDCARD_SPI);
-  myFile = SD.open("EnvGSR.csv", FILE_APPEND);
+  myFile = SD.open("Envir.csv", FILE_APPEND);  
   myFile.print(now.year(), DEC);
   myFile.print('/');
   myFile.print(now.month(), DEC);
@@ -214,12 +205,16 @@ void loop() {
   myFile.print(bme680.sensor_result_value.temperature);
   myFile.print(",");
   myFile.print(bme680.sensor_result_value.humidity);
-  myFile.println(",");
+  myFile.print(",");
   myFile.print(co2);
+  myFile.print(",");
+  myFile.print(temperature);
+  myFile.print(",");
+  myFile.print(humidity);
   myFile.println(",");
+//  myFile.close();
   
-  myFile.close();
-  
+    
   spr.pushSprite(0, 0);
-  delay(60000);
+  delay(1000);
 }
