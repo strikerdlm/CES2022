@@ -71,11 +71,11 @@ void loop() {
   spr.setFreeFont(&FreeSansBoldOblique9pt7b);                 // Select the font
   spr.setTextColor(TFT_WHITE);
   spr.drawString("cpm:", 60 - 24, 100 -24 , 1);// Print the test text in the custom font
-  spr.drawRoundRect(60 - 24,100,80,40,5,TFT_WHITE); 
+  spr.drawRoundRect(50 - 24,100,150,40,5,TFT_WHITE); 
   spr.setTextColor(TFT_WHITE);
   spr.drawNumber(cpm,60 - 20,100+10,1);
   spr.setTextColor(TFT_GREEN);
-  spr.drawString("cpm", 60 + 12, 100+8, 1);
+  spr.drawString("cpm", 110 + 12, 100+8, 1);
      
 // Dose
   spr.setTextColor(TFT_WHITE);
