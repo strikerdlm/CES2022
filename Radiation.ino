@@ -111,7 +111,8 @@ void loop() {
   spr.drawNumber(uv.readUVI(),60 - 20,180+10,1);
   spr.setTextColor(TFT_GREEN);
   spr.drawString("UV-I", 60 + 12, 180+8, 1);
-  SD.begin(SDCARD_SS_PIN, SDCARD_SPI);
+  
+  //SD.begin(SDCARD_SS_PIN, SDCARD_SPI);
   myFile = SD.open("RadUV.csv", FILE_APPEND);
   myFile.print(now.year(), DEC);
   myFile.print('/');
@@ -135,6 +136,7 @@ void loop() {
   myFile.print(",");
   myFile.print(cpm/151);
   myFile.println(",");
+//  myFile.close();
     
   spr.pushSprite(0, 0);
   delay(1000);
