@@ -32,7 +32,6 @@ File myFile;
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(WIO_LIGHT, INPUT);
   rtc.begin();
   tft.begin();
   tft.setRotation(3);
@@ -43,7 +42,16 @@ void setup() {
   multiplier = MAX_PERIOD / LOG_PERIOD;      //calculating multiplier, depend on your log period
   attachInterrupt(0, tube_impulse, FALLING); //define external interrupts 
   
+  Serial.println("VEML6075 Full Test");
+  if (! uv.begin()) {
+    Serial.println("Failed to communicate with VEML6075 sensor, check wiring?");
+  }
+  Serial.println("Found VEML6075 sensor");
+
+  // Set the integration constant
   uv.setIntegrationTime(VEML6075_100MS);
+  // Get the integration constant and print it!
+  Serial.print("Integration time set to ");
   switch (uv.getIntegrationTime()) {
     case VEML6075_50MS: Serial.print("50"); break;
     case VEML6075_100MS: Serial.print("100"); break;
@@ -51,9 +59,28 @@ void setup() {
     case VEML6075_400MS: Serial.print("400"); break;
     case VEML6075_800MS: Serial.print("800"); break;
   }
-    uv.setHighDynamic(true);
-    uv.setForcedMode(false);
-    uv.setCoefficients(2.22, 1.33,  // UVA_A and UVA_B coefficients
+  Serial.println("ms");
+
+  // Set the high dynamic mode
+  uv.setHighDynamic(true);
+  // Get the mode
+  if (uv.getHighDynamic()) {
+    Serial.println("High dynamic reading mode");
+  } else {
+    Serial.println("Normal dynamic reading mode");
+  }
+
+  // Set the mode
+  uv.setForcedMode(false);
+  // Get the mode
+  if (uv.getForcedMode()) {
+    Serial.println("Forced reading mode");
+  } else {
+    Serial.println("Continuous reading mode");
+  }
+
+  // Set the calibration coefficients
+  uv.setCoefficients(2.22, 1.33,  // UVA_A and UVA_B coefficients
                      2.95, 1.74,  // UVB_C and UVB_D coefficients
                      0.001461, 0.002591); // UVA and UVB responses
     
@@ -84,6 +111,11 @@ void loop() {
     previousMillis = currentMillis;
     cpm = counts * multiplier; 
   spr.setFreeFont(&FreeSansBoldOblique9pt7b);                 // Select the font
+  
+ 
+  Serial.print("Raw UVA reading:  "); Serial.println(uv.readUVA());
+  Serial.print("Raw UVB reading:  "); Serial.println(uv.readUVB());
+  Serial.print("UV Index reading: "); Serial.println(uv.readUVI());
   
   // cpm
   spr.setTextColor(TFT_WHITE);
