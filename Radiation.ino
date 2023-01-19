@@ -91,6 +91,7 @@ void setup() {
   //Serial.println("adjust time!");
   rtc.adjust(now);
   now = rtc.now();
+  
 }
 
 void loop() {
@@ -138,11 +139,11 @@ void loop() {
 //  UV Index
   spr.setTextColor(TFT_WHITE);
   spr.drawString("UV Index", 60 - 24, 180 -24 , 1);// Print the test text in the custom font
-  spr.drawRoundRect(60 - 24,180,80,40,5,TFT_WHITE);
+  spr.drawRoundRect(60 - 24,180,150,40,5,TFT_WHITE);
   spr.setTextColor(TFT_WHITE);
   spr.drawNumber(uv.readUVI(),60 - 20,180+10,1);
   spr.setTextColor(TFT_GREEN);
-  spr.drawString("UV-I", 60 + 12, 180+8, 1);
+  spr.drawString("UV-I", 110 + 12, 180+8, 1);
   
   //SD.begin(SDCARD_SS_PIN, SDCARD_SPI);
   myFile = SD.open("RadUV.csv", FILE_APPEND);
